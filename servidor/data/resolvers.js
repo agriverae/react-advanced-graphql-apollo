@@ -1,11 +1,11 @@
 import monggose from 'mongoose';
-import { Clientes } from  "./db"
+import { Clientes, Productos } from  "./db"
 import { rejects } from 'assert';
 
 export const resolvers = {
     Query: {
-        getClientes : (root, {limite}) => {
-            return Clientes.find({}).limit(limite)
+        getClientes : (root, {limite, offset}) => {
+            return Clientes.find({}).limit(limite).skip(offset)
         },
         getCliente : (root, {id}) => {
             return new Promise((resolve, object) => {
@@ -15,6 +15,14 @@ export const resolvers = {
                 })
             });
         },
+        totalClientes : (root) => {
+            return new Promise((resolve, object) => {
+                Clientes.countDocuments({}, (error, count) => {
+                    if(error) rejects(error);
+                    else resolve(count);
+                })
+            })
+        }
     },
     Mutation: {
         crearCliente : (root, {input}) => {
@@ -52,6 +60,22 @@ export const resolvers = {
                     else resolve("Se elimino correctamente");
                 })
             })
+        },
+        nuevoProducto : (root, {input}) => {
+            const nuevoProducto = new Productos({
+                nombre: input.nombre,
+                precio: input.precio,
+                stock: input.stock
+            });
+
+            nuevoProducto.id = nuevoProducto._id;
+
+            return new Promise((resolve, object) => {
+                nuevoProducto.save((error) => {
+                    if(error) rejects(error);
+                    else resolve(nuevoProducto);
+                });
+            });
         }
     }
 }
