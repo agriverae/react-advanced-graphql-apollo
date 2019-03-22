@@ -31,3 +31,41 @@ export const ELIMINAR_CLIENTE = gql`
     eliminarCliente(id: $id)
   }
 `;
+
+export const NUEVO_PRODUCTO = gql`
+  mutation nuevoProducto($input : ProductoInput) {
+    nuevoProducto(input: $input) {
+      nombre
+    }
+  }
+`
+
+export const ELIMINAR_PRODUCTO = gql`
+  mutation eliminarProducto($id : ID!) {
+    eliminarProducto(id: $id)
+  }
+`
+
+export const ACTUALIZAR_PRODUCTO = gql`
+  mutation actualizarProducto($input: ProductoInput) {
+    actualizarProducto(input: $input) {
+      nombre
+      precio
+      stock
+    }
+  }
+`
+
+export const NUEVO_PEDIDO = gql`
+mutation nuevoPedido($input: PedidoInput){
+  nuevoPedido(input: $input) {
+    id
+  }
+}
+`;
+
+export const ACTUALIZAR_ESTADO = gql`
+mutation actualizarEstado($input : PedidoInput) {
+  actualizarEstado(input: $input)
+}
+`;

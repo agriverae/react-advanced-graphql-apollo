@@ -2,12 +2,18 @@ import React, {Fragment, useState} from 'react'
 import { Query, Mutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
-import { CLIENTES_QUERY } from '../Queries';
-import { ELIMINAR_CLIENTE } from '../Mutations';
+import { CLIENTES_QUERY } from '../../Queries';
+import { ELIMINAR_CLIENTE } from '../../Mutations';
 
-import Paginador from './Paginador'
+import Paginador from '../Paginador'
+import Exito from '../Alertas/Exito';
 
 const Contactos = () =>  {
+
+    const [alerta, setAlerta] = useState({
+        mostrar: false,
+        mensaje: ''
+    })
 
     const [paginador, usePaginator] = useState({actual: 1, offset: 0})
     const limite = 5;
@@ -26,6 +32,8 @@ const Contactos = () =>  {
         })
     }
 
+    const mensajeAlerta = (alerta.mostrar) ? <Exito mensaje={alerta.mensaje} /> : '';
+
     return (
     <Query query={CLIENTES_QUERY} pollInterval={1000} variables={{limite: limite, offset: paginador.offset}}>
         {({ loading, error, data, startPolling, stopPolling }) => {
@@ -35,6 +43,7 @@ const Contactos = () =>  {
             return (
                 <Fragment>
                     <h2 className="text-center">Listado Clientes</h2>
+                    {mensajeAlerta}
                     <ul className="list-group mt-4">
                         {data.getClientes.map(item => {
                             const { id } = item;
@@ -45,7 +54,31 @@ const Contactos = () =>  {
                                         {item.nombre} {item.apellido} - {item.empresa}
                                     </div>
                                     <div className="col-md-4 d-flex-justify-content-end">
-                                        <Mutation mutation={ELIMINAR_CLIENTE}>
+                                        <Link
+                                            className="btn btn-warning d-block d-md-inline-block mr-2" 
+                                            to={`/pedidos/nuevo/${id}`}>
+                                            &#43; Nuevo Pedido
+                                        </Link>
+                                        <Link
+                                            className="btn btn-primary d-block d-md-inline-block mr-2" 
+                                            to={`/pedidos/${id}`}>
+                                            Ver Pedido
+                                        </Link>
+                                        <Mutation 
+                                            mutation={ELIMINAR_CLIENTE}
+                                            onCompleted={(data) => {
+                                                setAlerta({
+                                                    mostrar: true,
+                                                    mensaje: data.eliminarCliente
+                                                })
+                                                setTimeout(() => {
+                                                    setAlerta({
+                                                        mostrar: false,
+                                                        mensaje: ''
+                                                    })
+                                                }, 3000)
+                                            }}
+                                        >
                                             {eliminarCliente => (
                                                 <button 
                                                     type="button" 
@@ -60,7 +93,7 @@ const Contactos = () =>  {
                                                 >&times; Eliminar</button>
                                             )}
                                         </Mutation>
-                                        <Link to={`/cliente/editar/${item.id}`} className="btn btn-success d-block d-md-inline-block">
+                                        <Link to={`/clientes/editar/${item.id}`} className="btn btn-success d-block d-md-inline-block">
                                             Editar Cliente
                                         </Link>
                                     </div>
@@ -70,7 +103,7 @@ const Contactos = () =>  {
                     </ul>
                     <Paginador 
                         actual={paginador.actual}
-                        totalClientes={data.totalClientes}
+                        total={data.totalClientes}
                         limite={limite}
                         paginaAnterior={paginaAnterior}
                         paginaSiguiente={paginaSiguiente}

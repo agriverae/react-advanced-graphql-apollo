@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ACTUALIZAR_CLIENTE } from '../Mutations'; 
+import { ACTUALIZAR_CLIENTE } from '../../Mutations'; 
 import { Mutation } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 
@@ -38,7 +38,7 @@ const FormularioEditarCliente = (props) => {
                     mutation={ACTUALIZAR_CLIENTE}
                     onCompleted={() => 
                         props.refetch().then(() => {
-                            props.history.push('/');
+                            props.history.push('/clientes');
                         })}
                 >
                     {actualizarCliente => (

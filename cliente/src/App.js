@@ -5,11 +5,17 @@ import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 // Importar Componentes
 
-import Header from './Components/Header';
-import Clientes from './Components/Clientes';
-import EditarCliente from './Components/EditarCliente';
-import NuevoCliente from './Components/NuevoCliente';
+import Header from './Components/Layout/Header';
+import Clientes from './Components/Clientes/Clientes';
+import EditarCliente from './Components/Clientes/EditarCliente';
+import NuevoCliente from './Components/Clientes/NuevoCliente';
 
+import NuevoProducto from "./Components/Productos/NuevoProducto";
+import Productos from "./Components/Productos/Productos";
+import EditarProducto from './Components/Productos/EditarProducto'
+
+import NuevoPedido from './Components/Pedidos/NuevoPedido'
+import PedidosCliente from './Components/Pedidos/PedidosCliente';
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -30,9 +36,14 @@ class App extends Component {
             <Header />
             <div className="container">
               <Switch>
-                <Route exact path="/" component={Clientes} />
-                <Route exact path="/cliente/nuevo" component={NuevoCliente} />
-                <Route exact path="/cliente/editar/:id" component={EditarCliente} />
+                <Route exact path="/clientes" component={Clientes} />
+                <Route exact path="/clientes/editar/:id" component={EditarCliente} />
+                <Route exact path="/clientes/nuevo" component={NuevoCliente} />
+                <Route exact path="/productos" component={Productos} />
+                <Route exact path="/productos/editar/:id" component={EditarProducto} />
+                <Route exact path="/productos/nuevo" component={NuevoProducto} />
+                <Route exact path="/pedidos/nuevo/:id" component={NuevoPedido} />
+                <Route exact path="/pedidos/:id" component={PedidosCliente} />
               </Switch>
             </div>
           </Fragment>

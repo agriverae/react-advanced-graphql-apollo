@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 
-import { NUEVO_CLIENTE } from '../Mutations';
+import { NUEVO_CLIENTE } from '../../Mutations';
 import { Mutation } from 'react-apollo';
 
 const NuevoCliente = (props) => {
@@ -54,7 +54,7 @@ const NuevoCliente = (props) => {
         <Mutation 
           mutation={NUEVO_CLIENTE}
           onCompleted={() => {
-            props.history.push('/');
+            props.history.push('/clientes');
           }}
         >
           { crearCliente => (

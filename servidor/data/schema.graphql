@@ -6,14 +6,21 @@ type Cliente {
     emails: [Email]
     edad: Int
     tipo: TipoCliente
-    pedidos : [Pedido]
 }
 type Email {
     email: String
 }
 type Pedido {
-    producto: String
-    precio : Int
+    id: ID
+    pedido: [PedidoProducto]
+    total: Int
+    fecha: String
+    cliente: ID
+    estado: EstadoPedido
+}
+type PedidoProducto {
+    id: ID
+    cantidad: Int
 }
 type Producto {
     id: ID
@@ -26,10 +33,23 @@ enum TipoCliente {
     BASICO
     PREMIUM
 }
+enum EstadoPedido {
+    PENDIENTE
+    COMPLETADO
+    CANCELADO
+}
 type Query {
     getClientes(limite: Int, offset: Int) : [Cliente]
     getCliente(id: ID) : Cliente
     totalClientes : String
+
+    # Productos
+    obtenerProductos(limite: Int, offset: Int, stock: Boolean) : [Producto]
+    obtenerProducto(id: ID!) : Producto
+    totalProductos : String
+
+    #pedidos
+    obtenerPedidos( cliente: String ) : [Pedido]
 }
 input PedidoInput {
     producto: String
@@ -55,6 +75,19 @@ input ProductoInput {
     precio: Int!
     stock: Int!
 }
+input PedidoInput {
+    id: ID
+    pedido: [PedidoProductoInput]
+    total: Int
+    fecha: String
+    cliente: ID
+    estado: EstadoPedido
+}
+
+input PedidoProductoInput {
+    id: ID
+    cantidad: Int
+}
 
 """ Mutations para crear nuevos Clientes """
 type Mutation {
@@ -65,4 +98,9 @@ type Mutation {
     eliminarCliente(id: ID! ) : String
     #productos
     nuevoProducto(input: ProductoInput) : Producto
+    actualizarProducto(input: ProductoInput) : Producto
+    eliminarProducto(id: ID!) : String
+    #pedidos
+    nuevoPedido(input: PedidoInput) : Pedido
+    actualizarEstado(input: PedidoInput) : String
 }

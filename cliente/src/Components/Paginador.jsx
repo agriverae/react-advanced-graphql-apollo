@@ -1,10 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 const Paginador = (props) => {
 
-    const [paginador, setPaginador] = useState({
-        paginas: Math.ceil(Number(props.totalClientes) / props.limite)
-    })
+    const paginador = { paginas: Math.ceil(Number(props.total) / props.limite) }
 
     const {actual} = props
     const btnAnterior = (actual > 1 ) ? 
